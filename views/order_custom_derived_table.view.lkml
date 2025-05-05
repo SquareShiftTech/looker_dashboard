@@ -1,8 +1,7 @@
 
 view: order_custom_derived_table{
   derived_table: {
-    sql: select * from `sqsh-looker-project.Super_Store_Sales.Order_Details` od inner join `sqsh-looker-project.Super_Store_Sales.Region` r
-      on od.Region_ID=r.ID inner join `sqsh-looker-project.Super_Store_Sales.Returns` re on od.Order_ID=re.Order_ID ;;
+    sql: select * from `sqsh-looker-project.Super_Store_Sales.Order_Details` od inner join `sqsh-looker-project.Super_Store_Sales.Returns` re on od.Order_ID=re.Order_ID ;;
   }
 
   measure: count {
@@ -15,12 +14,24 @@ view: order_custom_derived_table{
     sql: ${TABLE}.Order_ID ;;
   }
 
+  dimension: region {
+    type: string
+    sql: ${TABLE}.Region ;;
+  }
+
+
   dimension: order_date {
     type: date
     datatype: date
     sql: ${TABLE}.Order_Date ;;
   }
-
+  dimension_group: order_date_timeframes {
+    type: time
+    timeframes: [raw, date, week, month, quarter, year]
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}.Order_Date ;;
+  }
   dimension: ship_date {
     type: date
     datatype: date
@@ -68,11 +79,6 @@ view: order_custom_derived_table{
     sql: ${TABLE}.Postal_Code ;;
   }
 
-  dimension: region {
-    type: string
-    sql: ${TABLE}.Region ;;
-  }
-
   dimension: region_id {
     type: number
     sql: ${TABLE}.Region_ID ;;
@@ -103,15 +109,9 @@ view: order_custom_derived_table{
     sql: ${TABLE}.Sales ;;
   }
 
-
   dimension: id {
     type: number
     sql: ${TABLE}.ID ;;
-  }
-
-  dimension: region_1 {
-    type: string
-    sql: ${TABLE}.Region_1 ;;
   }
 
   dimension: returned {
@@ -178,7 +178,6 @@ view: order_custom_derived_table{
       city,
       state,
       postal_code,
-      region,
       region_id,
       product_id,
       category,
@@ -189,7 +188,6 @@ view: order_custom_derived_table{
       discount,
       profit,
       id,
-      region_1,
       returned,
       order_id_1
     ]
