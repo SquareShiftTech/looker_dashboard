@@ -1,0 +1,203 @@
+
+view: order_custom_derived_table{
+  derived_table: {
+    sql: select * from `sqsh-looker-project.Super_Store_Sales.Order_Details` od inner join `sqsh-looker-project.Super_Store_Sales.Region` r
+      on od.Region_ID=r.ID inner join `sqsh-looker-project.Super_Store_Sales.Returns` re on od.Order_ID=re.Order_ID ;;
+  }
+
+  measure: count {
+    type: count
+    drill_fields: [detail*]
+  }
+
+  dimension: order_id {
+    type: string
+    sql: ${TABLE}.Order_ID ;;
+  }
+
+  dimension: order_date {
+    type: date
+    datatype: date
+    sql: ${TABLE}.Order_Date ;;
+  }
+
+  dimension: ship_date {
+    type: date
+    datatype: date
+    sql: ${TABLE}.Ship_Date ;;
+  }
+
+  dimension: ship_mode {
+    type: string
+    sql: ${TABLE}.Ship_Mode ;;
+  }
+
+  dimension: customer_id {
+    type: string
+    sql: ${TABLE}.Customer_ID ;;
+  }
+
+  dimension: customer_name {
+    type: string
+    sql: ${TABLE}.Customer_Name ;;
+  }
+
+  dimension: segment {
+    type: string
+    sql: ${TABLE}.Segment ;;
+  }
+
+  dimension: country {
+    type: string
+    sql: ${TABLE}.Country ;;
+  }
+
+  dimension: city {
+    type: string
+    sql: ${TABLE}.City ;;
+  }
+
+  dimension: state {
+    type: string
+    sql: ${TABLE}.State ;;
+  }
+
+  dimension: postal_code {
+    type: number
+    sql: ${TABLE}.Postal_Code ;;
+  }
+
+  dimension: region {
+    type: string
+    sql: ${TABLE}.Region ;;
+  }
+
+  dimension: region_id {
+    type: number
+    sql: ${TABLE}.Region_ID ;;
+  }
+
+  dimension: product_id {
+    type: string
+    sql: ${TABLE}.Product_ID ;;
+  }
+
+  dimension: category {
+    type: string
+    sql: ${TABLE}.Category ;;
+  }
+
+  dimension: sub_category {
+    type: string
+    sql: ${TABLE}.Sub_Category ;;
+  }
+
+  dimension: product_name {
+    type: string
+    sql: ${TABLE}.Product_Name ;;
+  }
+
+  dimension: sales {
+    type: number
+    sql: ${TABLE}.Sales ;;
+  }
+
+
+  dimension: id {
+    type: number
+    sql: ${TABLE}.ID ;;
+  }
+
+  dimension: region_1 {
+    type: string
+    sql: ${TABLE}.Region_1 ;;
+  }
+
+  dimension: returned {
+    type: yesno
+    sql: ${TABLE}.Returned ;;
+  }
+
+  dimension: order_id_1 {
+    type: string
+    sql: ${TABLE}.Order_ID_1 ;;
+  }
+  measure: total_sales {
+    type: sum
+    sql: ${TABLE}.sales ;;
+    value_format_name: "decimal_0"
+  }
+  measure: sales_percentage_of_total {
+    type: number
+    sql: ${sales} / SUM(${sales}) OVER () ;;
+    value_format_name: "decimal_2"
+    label: "Percentage Sale Diff"
+    description: "Each row's sales divided by total sales across the table"
+  }
+  measure: sales_rank {
+    type: number
+    sql: RANK() OVER (ORDER BY ${sales} DESC) ;;
+    label: "Sales Rank"
+    description: "Rank of Sales by Sub-Category or other grouping"
+  }
+
+  measure: avg_profit_margin {
+    type: average
+    sql: CASE WHEN ${TABLE}.Sales != 0 THEN ${TABLE}.Profit / ${TABLE}.Sales ELSE 0 END ;;
+    value_format_name: "percent_0"
+    label: "Avg. Profit Margin"
+  }
+  measure: profit_margin {
+    type: sum
+    label: "Profit Margin"
+    sql: CASE WHEN ${TABLE}.Sales != 0 THEN ${TABLE}.Profit / ${TABLE}.Sales ELSE 0 END ;;
+    value_format_name: "decimal_2"
+  }
+  measure: count_custom_sql_query {
+    type: count
+    label: "Count of Custom SQL Query"
+  }
+  measure: discount {
+    type: sum
+    sql: ${TABLE}.discount ;;
+    value_format_name: "percent_2"
+  }
+  measure: profit {
+    type: sum
+    sql: ${TABLE}.profit ;;
+    value_format_name: "decimal_0"
+  }
+  measure: quantity {
+    type: sum
+    sql: ${TABLE}.quantity ;;
+  }
+  set: detail {
+    fields: [
+      order_id,
+      order_date,
+      ship_date,
+      ship_mode,
+      customer_id,
+      customer_name,
+      segment,
+      country,
+      city,
+      state,
+      postal_code,
+      region,
+      region_id,
+      product_id,
+      category,
+      sub_category,
+      product_name,
+      sales,
+      quantity,
+      discount,
+      profit,
+      id,
+      region_1,
+      returned,
+      order_id_1
+    ]
+  }
+}
