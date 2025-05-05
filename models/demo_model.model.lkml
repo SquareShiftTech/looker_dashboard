@@ -5,9 +5,10 @@ connection: "analytics"
 include: "/views/**/*.view.lkml"
 
 explore: order_custom_derived_table
-{
-label : "Order Details with Region & Returns"
-}
+   {
+  label : "Order Details with Region & Returns"
+   }
+
 explore: orders {
   label : "Orders & Returns"
   join: returns{

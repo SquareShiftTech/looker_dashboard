@@ -59,6 +59,7 @@ view: order_custom_derived_table{
 
   dimension: state {
     type: string
+    map_layer_name: us_states
     sql: ${TABLE}.State ;;
   }
 
@@ -126,13 +127,6 @@ view: order_custom_derived_table{
     type: sum
     sql: ${TABLE}.sales ;;
     value_format_name: "decimal_0"
-  }
-  measure: sales_percentage_of_total {
-    type: number
-    sql: ${sales} / SUM(${sales}) OVER () ;;
-    value_format_name: "decimal_2"
-    label: "Percentage Sale Diff"
-    description: "Each row's sales divided by total sales across the table"
   }
   measure: sales_rank {
     type: number
