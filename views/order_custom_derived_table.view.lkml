@@ -32,6 +32,20 @@ view: order_custom_derived_table{
     datatype: date
     sql: ${TABLE}.Order_Date ;;
   }
+  dimension: cy {
+    type: yesno
+    hidden: yes
+    sql: EXTRACT(YEAR FROM ${order_date}) = (
+         SELECT MAX(EXTRACT(YEAR FROM ${order_date})) FROM ${TABLE}
+       );;
+  }
+  dimension: py {
+    hidden: yes
+    type: yesno
+    sql: EXTRACT(YEAR FROM ${order_date}) = (
+         SELECT MAX(EXTRACT(YEAR FROM ${order_date})) - 1 FROM ${TABLE}
+       );;
+  }
   dimension: ship_date {
     type: date
     datatype: date
@@ -123,6 +137,10 @@ view: order_custom_derived_table{
     type: string
     sql: ${TABLE}.Order_ID_1 ;;
   }
+  dimension: order_month_name {
+    type: string
+    sql: FORMAT_DATE('%B', DATE(${TABLE}.Order_Date)) ;;
+  }
   measure: total_sales {
     type: sum
     sql: ${TABLE}.sales ;;
@@ -134,7 +152,26 @@ view: order_custom_derived_table{
     label: "Sales Rank"
     description: "Rank of Sales by Sub-Category or other grouping"
   }
-
+  measure: sales_cy {
+    type: sum
+    sql: IFNULL(CASE WHEN ${cy} THEN ${TABLE}.Sales END, 0) ;;
+    value_format: "#,##0"
+  }
+  measure: sales_py {
+    type: sum
+    sql: IFNULL(CASE WHEN ${py} THEN ${TABLE}.Sales END, 0) ;;
+    value_format: "#,##0"
+  }
+  measure: profit_cy {
+    type: sum
+    sql:IFNULL(CASE WHEN ${cy} THEN ${TABLE}.Profit END, 0) ;;
+    value_format: "#,##0"
+  }
+  measure: profit_py {
+    type: sum
+    sql: IFNULL(CASE WHEN ${py} THEN ${TABLE}.Profit END, 0) ;;
+    value_format: "#,##0"
+  }
   measure: avg_profit_margin {
     type: average
     sql: CASE WHEN ${TABLE}.Sales != 0 THEN ${TABLE}.Profit / ${TABLE}.Sales ELSE 0 END ;;
@@ -164,6 +201,11 @@ view: order_custom_derived_table{
   measure: quantity {
     type: sum
     sql: ${TABLE}.quantity ;;
+  }
+  measure: profit_percentage {
+    type: number
+    sql: ${profit}/${total_sales} ;;
+    value_format: "0%"
   }
   set: detail {
     fields: [

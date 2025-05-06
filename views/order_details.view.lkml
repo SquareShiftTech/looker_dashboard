@@ -51,7 +51,6 @@ view: order_details {
     datatype: date
     sql: ${TABLE}.Order_Date ;;
   }
-
   dimension: order_id {
     type: string
     sql: ${TABLE}.Order_ID ;;
