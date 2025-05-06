@@ -51,7 +51,10 @@ view: order_custom_derived_table{
     datatype: date
     sql: ${TABLE}.Ship_Date ;;
   }
-
+  dimension: order_month_number {
+    type: number
+    sql: EXTRACT(MONTH FROM DATE(${TABLE}.Order_Date)) ;;
+  }
   dimension: ship_mode {
     type: string
     sql: ${TABLE}.Ship_Mode ;;
