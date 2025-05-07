@@ -163,4 +163,10 @@ view: orders_data {
     sql: IFNULL(CASE WHEN ${py} THEN ${TABLE}.Profit END, 0) ;;
     value_format: "#,##0"
   }
+  measure: profit_margin {
+    type: sum
+    label: "Profit Margin"
+    sql: CASE WHEN ${TABLE}.Sales != 0 THEN ${TABLE}.Profit / ${TABLE}.Sales ELSE 0 END ;;
+    value_format_name: "decimal_2"
+  }
 }
