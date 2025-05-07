@@ -98,7 +98,20 @@ view: orders_data {
     type: string
     sql: ${TABLE}.Ship_Mode ;;
   }
-
+  dimension: cy {
+    type: yesno
+    hidden: yes
+    sql: EXTRACT(YEAR FROM ${order_date}) = (
+         SELECT MAX(EXTRACT(YEAR FROM ${order_date})) FROM ${TABLE}
+       );;
+  }
+  dimension: py {
+    hidden: yes
+    type: yesno
+    sql: EXTRACT(YEAR FROM ${order_date}) = (
+         SELECT MAX(EXTRACT(YEAR FROM ${order_date})) - 1 FROM ${TABLE}
+       );;
+  }
   dimension: state {
     type: string
     sql: ${TABLE}.State ;;
@@ -123,12 +136,31 @@ view: orders_data {
     sql: ${TABLE}.Sales ;;
   }
   measure: profit {
-    type: number
+    type: sum
     sql: ${TABLE}.Profit ;;
   }
   measure: quantity {
-    type: number
+    type: sum
     sql: ${TABLE}.Quantity ;;
   }
-
+  measure: sales_cy {
+    type: sum
+    sql: IFNULL(CASE WHEN ${cy} THEN ${TABLE}.Sales END, 0) ;;
+    value_format: "#,##0"
+  }
+  measure: sales_py {
+    type: sum
+    sql: IFNULL(CASE WHEN ${py} THEN ${TABLE}.Sales END, 0) ;;
+    value_format: "#,##0"
+  }
+  measure: profit_cy {
+    type: sum
+    sql:IFNULL(CASE WHEN ${cy} THEN ${TABLE}.Profit END, 0) ;;
+    value_format: "#,##0"
+  }
+  measure: profit_py {
+    type: sum
+    sql: IFNULL(CASE WHEN ${py} THEN ${TABLE}.Profit END, 0) ;;
+    value_format: "#,##0"
+  }
 }
