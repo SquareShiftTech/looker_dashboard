@@ -71,17 +71,6 @@ view: orders_data {
     type: string
     sql: ${TABLE}.Product_Name ;;
   }
-
-  dimension: profit {
-    type: number
-    sql: ${TABLE}.Profit ;;
-  }
-
-  dimension: quantity {
-    type: number
-    sql: ${TABLE}.Quantity ;;
-  }
-
   dimension: region {
     type: string
     sql: ${TABLE}.Region ;;
@@ -90,11 +79,6 @@ view: orders_data {
   dimension: region_id {
     type: number
     sql: ${TABLE}.Region_ID ;;
-  }
-
-  dimension: sales {
-    type: number
-    sql: ${TABLE}.Sales ;;
   }
 
   dimension: segment {
@@ -133,4 +117,17 @@ view: orders_data {
     type: count
     drill_fields: [customer_name, product_name]
   }
+  measure: sales {
+    type: sum
+    sql: ${TABLE}.Sales ;;
+  }
+  measure: profit {
+    type: number
+    sql: ${TABLE}.Profit ;;
+  }
+  measure: quantity {
+    type: number
+    sql: ${TABLE}.Quantity ;;
+  }
+
 }
