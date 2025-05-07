@@ -119,6 +119,7 @@ view: orders_data {
   }
   measure: sales {
     type: sum
+    value_format: "0,\" K\""
     sql: ${TABLE}.Sales ;;
   }
   measure: profit {
