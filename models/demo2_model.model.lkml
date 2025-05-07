@@ -4,6 +4,12 @@ include: "/views/*.view.lkml"
 
 explore: orders_data {
   label : "Orders Analysis"
+
+  access_filter: {
+    field: region.region
+    user_attribute: region
+  }
+
   join: user_access{
     sql_on: ${orders_data.region_id} =${user_access.region_id} ;;
     type: inner
