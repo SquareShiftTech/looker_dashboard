@@ -2,8 +2,16 @@ connection: "analytics"
 
 include: "/views/*.view.lkml"
 
+datagroup: demo_pdt {
+  max_cache_age: "1 hours"
+  sql_trigger:SELECT CURRENT_TIMESTAMP() ;;
+  interval_trigger: "1 hours"
+}
+
 explore: orders_data {
   label : "Orders Analysis"
+
+  persist_with: demo_pdt
 
   access_filter: {
     field: region.region
