@@ -169,4 +169,17 @@ view: orders_data {
     sql: CASE WHEN ${TABLE}.Sales != 0 THEN ${TABLE}.Profit / ${TABLE}.Sales ELSE 0 END ;;
     value_format_name: "decimal_2"
   }
+  measure: sales_rank {
+    type: number
+    sql: RANK() OVER (ORDER BY ${sales} DESC) ;;
+    label: "Sales Rank"
+  }
+  measure: rank_lod {
+    type: number
+    sql: RANK() OVER (
+          PARTITION BY ${region}
+          ORDER BY SUM(${TABLE}.sales) DESC
+        ) ;;
+    value_format_name: decimal_0
+  }
 }
