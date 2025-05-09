@@ -1,5 +1,6 @@
 # Define the database connection to be used for this model.
 connection: "analytics"
+label: "Order Analytics"
 
 # include all the views
 include: "/views/**/*.view.lkml"

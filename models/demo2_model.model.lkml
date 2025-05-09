@@ -1,4 +1,5 @@
 connection: "analytics"
+label: "Order Analytics"
 
 include: "/views/*.view.lkml"
 
@@ -9,7 +10,7 @@ datagroup: demo_pdt {
 }
 
 explore: orders_data {
-  label : "Orders Analysis"
+  label : "Orders Analysis PDP Implemented"
 
   persist_with: demo_pdt
 
