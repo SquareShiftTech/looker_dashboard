@@ -138,6 +138,7 @@ view: orders_data {
   measure: profit {
     type: sum
     sql: ${TABLE}.Profit ;;
+    value_format: "#,##0"
   }
   measure: quantity {
     type: sum
@@ -181,5 +182,53 @@ view: orders_data {
           ORDER BY SUM(${TABLE}.sales) DESC
         ) ;;
     value_format_name: decimal_0
+  }
+  measure: conditional_formatted_profit {
+    type: sum
+    sql: ${TABLE}.Profit ;;
+    html:
+    {% assign formatted_profit = value | round: 0 %}
+    {% if value < -9000 %}
+      <span style="color: #eb304c;">{{ formatted_profit }}</span>
+    {% elsif value < 0 %}
+      <span style="color: #E8710A;">{{ formatted_profit }}</span>
+    {% elsif value == 0 %}
+      <span style="color: #80868B;">{{ formatted_profit }}</span>
+    {% elsif value < 10000 %}
+      <span style="color: #12B5CB;">{{ formatted_profit }}</span>
+    {% else %}
+      <span style="color:#1b7ecc;">{{ formatted_profit }}</span>
+    {% endif %};;
+  }
+  measure: conditional_formatted_sales {
+    type: number
+    sql: SUM(${TABLE}.Sales) ;;
+    html:
+    {% assign formatted_sales = value | round: 0 %}
+    {% if profit._value < -5000 %}
+    <span style="color: #eb304c;">{{ formatted_sales }}</span>
+    {% elsif profit._value < 0 %}
+    <span style="color: #E8710A;">{{ formatted_sales }}</span>
+    {% elsif profit._value == 0 %}
+    <span style="color: #80868B;">{{ formatted_sales }}</span>
+    {% elsif profit._value < 10000 %}
+    <span style="color: #12B5CB;">{{ formatted_sales }}</span>
+    {% else %}
+    <span style="color: #1b7ecc;">{{ formatted_sales }}</span>
+    {% endif %};;
+  }
+  dimension: order_month_name {
+    type: string
+    sql: FORMAT_DATE('%B', DATE(${TABLE}.Order_Date)) ;;
+  }
+  dimension: order_month_number {
+    type: number
+    sql: EXTRACT(MONTH FROM DATE(${TABLE}.Order_Date)) ;;
+  }
+  measure: sales_percentage_of_total {
+    type: number
+    sql: ${sales} / SUM(${sales}) OVER () ;;
+    value_format_name: "decimal_2"
+    label: "Sales Percentage of Total"
   }
 }
